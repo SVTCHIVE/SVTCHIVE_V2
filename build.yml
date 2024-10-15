@@ -1,0 +1,36 @@
+name: SVTCHIVE
+
+on:
+    push:
+        branches:
+            - main # main 브랜치에 push될 때 실행
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            # 1. 리포지토리 체크아웃
+            - name: Checkout repository
+              uses: actions/checkout@v2
+
+            # 2. Node.js 설치
+            - name: Set up Node.js
+              uses: actions/setup-node@v2
+              with:
+                  node-version: "20" # 원하는 Node.js 버전
+
+            # 3. NPM 패키지 설치
+            - name: Install dependencies
+              run: npm install
+
+            # 4. Vite 프로젝트 빌드
+            - name: Build project
+              run: npm run build
+
+            # 5. 빌드된 파일을 GitHub Pages로 배포
+            - name: Deploy to GitHub Pages
+              uses: peaceiris/actions-gh-pages@v4
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }} # 기본적으로 제공되는 GitHub 토큰
+                  publish_dir: ./dist # Vite의 빌드 결과물은 보통 'dist' 폴더에 생성됨
